@@ -324,7 +324,7 @@
     break-inside: avoid;
     margin-bottom: 34px;
     background: var(--paper);
-    padding: 12px 12px 44px;                 /* 底部留白当拍立得说明区 */
+    padding: 26px 12px 44px;                 /* 顶部留白容纳图钉,底部留白当说明区 */
     border: 2.5px solid var(--ink);
     box-shadow: 4px 5px 0 rgba(43,39,35,.18);
     transition: transform .25s, box-shadow .25s;
@@ -350,13 +350,13 @@
     text-align: center; font-family: var(--hand);
     font-size: 1.15rem; color: #5a5248;
   }
-  /* 手绘小图钉 */
+  /* 手绘小图钉:落在卡片顶部白边内侧,避免瀑布流里被相邻卡片裁切或溢出残留 */
   .polaroid::before {
-    content: ""; position: absolute; top: -7px; left: 50%;
-    width: 14px; height: 14px; transform: translateX(-50%) rotate(-8deg);
+    content: ""; position: absolute; top: 7px; left: 50%;
+    width: 13px; height: 13px; transform: translateX(-50%) rotate(-8deg);
     background: var(--accent); border: 2px solid var(--ink); border-radius: 50%;
     box-shadow: 1px 2px 0 rgba(43,39,35,.25);
-    z-index: 6;
+    z-index: 3;
   }
   .polaroid:nth-child(even)::before { background: var(--blue); }
 
@@ -508,6 +508,8 @@
   <p class="hero-hint">✦ 试试点点飘在旁边的小涂鸦 ✦</p>
   <nav class="hero-nav">
     <a href="#about" class="sketch-btn">关于我</a>
+    <a href="#life" class="sketch-btn">生活</a>
+    <a href="#exp" class="sketch-btn">经历</a>
     <a href="#work" class="sketch-btn">作品</a>
     <a href="#contact" class="sketch-btn">联系</a>
   </nav>
