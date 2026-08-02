@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>小宁 · 欢迎来到我的世界</title>
+<meta name="description" content="王奕宁的个人网站 — 本硕西电保研,AI 应用开发工程师,喜欢 vibe coding、探索与创造。" />
+<style>
+  /* ============ 手写字体:霞鹜文楷子集(SIL OFL 可商用),退化到系统手写体 ============ */
+  @font-face {
+    font-family: "LXGW";
+    src: url("lxgw-subset.woff2") format("woff2");
+    font-display: swap;
+  }
+  :root {
+    --ink: #2b2723;            /* 墨黑 */
+    --paper: #f7f3ea;          /* 纸白 */
+    --paper2: #efe9dc;         /* 深一点的纸 */
+    --accent: #d94f4f;         /* 手绘红点缀 */
+    --accent2: #e8a13a;        /* 暖橙 */
+    --blue: #4a7fb5;           /* 手绘蓝 */
+    --hand: "LXGW", "Kaiti SC", "KaiTi", "楷体", "Comic Sans MS", cursive;
+    --hand-en: "LXGW", "Comic Sans MS", "Chalkboard SE", cursive;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--hand);
+    background: var(--paper);
+    color: var(--ink);
+    /* 纸张纹理:细网点 */
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(43,39,35,0.04) 1px, transparent 0);
+    background-size: 22px 22px;
+    overflow-x: hidden;
+    cursor: none; /* 隐藏默认光标,用自定义小蜜蜂 */
+  }
+
+  /* 移动端恢复默认光标(触屏没鼠标) */
+  @media (hover: none) {
+    body { cursor: auto; }
+    #cursor-bee { display: none !important; }
+  }
+
+  a { color: inherit; }
+
+  /* ============ 手绘边框工具类(用 SVG 抖动滤镜 + 不规则圆角) ============ */
+  .sketch-box {
+    position: relative;
+    border: 2.5px solid var(--ink);
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 经典手绘不规则圆角 */
+    background: var(--paper);
+    filter: url(#roughpaper);
+  }
+
+  .sketch-btn {
+    display: inline-block;
+    font-family: var(--hand);
+    font-size: 1.15rem;
+    padding: 10px 26px;
+    margin: 6px;
+    border: 2.5px solid var(--ink);
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    background: var(--paper);
+    color: var(--ink);
+    text-decoration: none;
+    cursor: none;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s;
+    box-shadow: 3px 3px 0 rgba(43,39,35,0.25);
+  }
+  @media (hover:none){ .sketch-btn{ cursor:pointer; } }
+  .sketch-btn:hover {
+    transform: rotate(-2deg) translateY(-2px);
+    background: var(--accent2);
+    color: #fff;
+    box-shadow: 5px 5px 0 rgba(43,39,35,0.35);
+    animation: wobble .5s ease;
+  }
+  @keyframes wobble {
+    0%,100%{ transform: rotate(-2deg) translateY(-2px);}
+    25%{ transform: rotate(2deg) translateY(-2px);}
+    50%{ transform: rotate(-1deg) translateY(-3px);}
+    75%{ transform: rotate(1deg) translateY(-2px);}
+  }
+
+  /* ============ 自定义光标:小蜜蜂 ============ */
+  #cursor-bee {
+    position: fixed;
+    left: 0; top: 0;
+    width: 34px; height: 34px;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform .08s ease-out;
+    will-change: transform;
+  }
+
+  /* ============ 各区块通用 ============ */
+  section { padding: 80px 24px; max-width: 1000px; margin: 0 auto; position: relative; }
+  .section-title {
+    font-size: 2.4rem;
+    margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
+  }
+  .section-title::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: -8px;
+    width: 100%; height: 8px;
+    background: var(--accent);
+    border-radius: 40% 60% 50% 50% / 100% 100% 0 0;
+    opacity: .55;
+  }
+
+  /* ============ HERO ============ */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    max-width: none;
+    padding: 40px 24px;
+  }
+  .hero-title {
+    font-size: clamp(4rem, 18vw, 11rem);
+    line-height: .95;
+    letter-spacing: .05em;
+    position: relative;
+    animation: titlePop 1s cubic-bezier(.2,1.4,.5,1) both;
+  }
+  @keyframes titlePop {
+    from { transform: scale(.3) rotate(-8deg); opacity:0; }
+    to   { transform: scale(1) rotate(-3deg); opacity:1; }
+  }
+  .hero-title { transform: rotate(-3deg); cursor: none; user-select: none;
+    text-shadow: 4px 4px 0 rgba(217,79,79,.18), 8px 8px 0 rgba(74,127,181,.12); }
+  @media(hover:none){ .hero-title{ cursor:pointer; } }
+  .hero-title:hover { animation: nameShake .5s ease; }
+  @keyframes nameShake {
+    0%,100%{ transform: rotate(-3deg); }
+    20%{ transform: rotate(-6deg) scale(1.03); }
+    40%{ transform: rotate(1deg) scale(1.02); }
+    60%{ transform: rotate(-4deg) scale(1.03); }
+    80%{ transform: rotate(2deg); }
+  }
+  .hero-sub {
+    font-size: clamp(1.2rem, 4vw, 2rem);
+    margin-top: 24px;
+    color: #5a5248;
+    animation: fadeUp 1s ease .5s both;
+  }
+  @keyframes fadeUp { from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+  .hero-nav { margin-top: 44px; animation: fadeUp 1s ease .8s both; }
+  .hero-hint {
+    margin-top: 18px; font-size: 1rem; color: var(--accent);
+    animation: fadeUp 1s ease 1s both, hintPulse 2.5s ease 2s infinite;
+  }
+  @keyframes hintPulse { 0%,100%{opacity:.6;} 50%{opacity:1;} }
+
+  /* ============ 可点击手绘涂鸦彩蛋 ============ */
+  .doodle {
+    position: absolute;
+    width: 68px; height: 68px;
+    cursor: none;
+    z-index: 5;
+    display: flex; flex-direction: column; align-items: center;
+    animation: floaty 4s ease-in-out infinite;
+    transition: transform .2s;
+  }
+  @media(hover:none){ .doodle{ cursor:pointer; } }
+  #doodle-card{ animation-delay:.6s; } #doodle-star{ animation-delay:1.2s; } #doodle-wand{ animation-delay:1.8s; }
+  .doodle svg { width: 54px; height: 54px; overflow: visible; transition: transform .25s; }
+  .doodle:hover { transform: scale(1.18) rotate(-4deg); }
+  .doodle:hover svg { filter: drop-shadow(2px 3px 0 rgba(43,39,35,.2)); }
+  .doodle-label {
+    font-family: var(--hand); font-size: .85rem; color: var(--ink);
+    opacity: 0; transform: translateY(-4px); transition: all .2s; margin-top: 2px;
+    white-space: nowrap;
+  }
+  .doodle:hover .doodle-label { opacity: 1; transform: translateY(0); }
+  @media (max-width: 640px){
+    .doodle{ width:52px; height:52px; } .doodle svg{ width:42px; height:42px; }
+  }
+
+  /* 彩蛋弹层 */
+  #egg-overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(43,39,35,.35);
+    display: none; align-items: center; justify-content: center;
+    padding: 24px; backdrop-filter: blur(2px);
+  }
+  #egg-overlay.show { display: flex; animation: fadeIn .25s ease; }
+  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+  #egg-card {
+    max-width: 440px; width: 100%; padding: 36px 34px 32px;
+    position: relative; background: var(--paper);
+    animation: eggPop .35s cubic-bezier(.2,1.4,.5,1) both;
+  }
+  @keyframes eggPop { from{transform:scale(.7) rotate(-3deg); opacity:0;} to{transform:scale(1) rotate(-.5deg); opacity:1;} }
+  #egg-close {
+    position: absolute; top: 10px; right: 14px;
+    font-family: var(--hand); font-size: 1.4rem; background: none; border: none;
+    color: var(--ink); cursor: none;
+  }
+  @media(hover:none){ #egg-close{ cursor:pointer; } }
+  #egg-content h3 { font-size: 1.8rem; margin-bottom: 14px; }
+  #egg-content p { font-size: 1.2rem; line-height: 1.9; color: #4a443c; }
+  #egg-content .big { font-size: 2.6rem; text-align:center; margin-bottom: 10px; }
+  #egg-content ul { list-style:none; margin-top: 10px; }
+  #egg-content li { font-size:1.15rem; line-height:1.9; padding-left:24px; position:relative; }
+  #egg-content li::before{ content:"✎"; position:absolute; left:0; color:var(--accent); }
+
+  /* 旧涂鸦装饰(已弃用,保留空样式避免残留引用) */
+  .scribble-deco { display: none; }
+  .down-arrow {
+    margin-top: 50px;
+    font-size: 2rem;
+    animation: bounce 1.8s infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(12px);} }
+
+  /* ============ 关于我 ============ */
+  .about-text {
+    font-size: 1.5rem;
+    line-height: 2.2;
+    max-width: 720px;
+    text-wrap: pretty;
+  }
+  .about-text .hl { color: var(--accent); position: relative; white-space: nowrap; }
+  .about-text .hl::after {
+    content:""; position:absolute; left:-2px; right:-2px; bottom:2px; height:10px;
+    background: var(--accent2); opacity:.35; z-index:-1; border-radius:6px;
+  }
+  /* 可点击成就气泡 */
+  .bubbles { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 18px; }
+  .bubble {
+    font-size: 1.05rem;
+    padding: 8px 20px;
+    border: 2.5px solid var(--ink);
+    border-radius: 50% 50% 50% 8px / 60% 60% 40% 40%;
+    background: var(--paper);
+    cursor: none;
+    transition: transform .2s;
+    box-shadow: 2px 2px 0 rgba(43,39,35,.2);
+    animation: floaty 3s ease-in-out infinite;
+  }
+  @media(hover:none){ .bubble{cursor:pointer;} }
+  .bubble:nth-child(2){ animation-delay:.4s; }
+  .bubble:nth-child(3){ animation-delay:.8s; }
+  .bubble:nth-child(4){ animation-delay:1.2s; }
+  .bubble:nth-child(5){ animation-delay:1.6s; }
+  @keyframes floaty { 0%,100%{transform:translateY(0) rotate(-1deg);} 50%{transform:translateY(-8px) rotate(1deg);} }
+  .bubble:hover { transform: scale(1.15) rotate(3deg); background: var(--accent2); color:#fff; }
+
+  /* ============ 经历 & 项目 ============ */
+  .cards { display: flex; flex-direction: column; gap: 34px; }
+  .card {
+    padding: 28px 30px;
+    position: relative;
+    transform: rotate(-.6deg);
+    transition: transform .2s;
+  }
+  .card:nth-child(even){ transform: rotate(.8deg); }
+  .card:hover { transform: rotate(0deg) scale(1.015); }
+  .card h3 { font-size: 1.7rem; margin-bottom: 6px; }
+  .card .tag {
+    display:inline-block; font-size:.95rem; color:#fff; background:var(--blue);
+    padding:2px 12px; border-radius: 40px 12px 40px 12px; margin-bottom:14px;
+  }
+  .card ul { list-style: none; }
+  .card li {
+    font-size: 1.15rem; line-height: 1.9; padding-left: 30px; position: relative; margin-bottom: 6px;
+  }
+  .card li::before {
+    content: "✎"; position: absolute; left: 0; color: var(--accent); font-size: 1.1rem;
+  }
+  .card .note { margin-top: 10px; font-size: 1.1rem; color:#5a5248; }
+
+  /* ============ 作品 ============ */
+  .works { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+  @media (max-width: 720px){ .works{ grid-template-columns: 1fr; } }
+  .work-frame {
+    padding: 22px;
+    text-decoration: none;
+    display: block;
+    transform: rotate(-1deg);
+    transition: transform .25s, box-shadow .25s;
+    cursor: none;
+  }
+  @media(hover:none){ .work-frame{cursor:pointer;} }
+  .work-frame:nth-child(even){ transform: rotate(1.2deg); }
+  .work-frame:hover { transform: rotate(0) translateY(-6px); box-shadow: 8px 10px 0 rgba(43,39,35,.18); }
+  .work-frame h3 { font-size: 1.6rem; margin-bottom: 8px; }
+  .work-frame .desc { font-size: 1.1rem; line-height: 1.7; color:#5a5248; }
+  .work-frame .go {
+    margin-top: 14px; display:inline-block; font-size:1.1rem; color: var(--accent);
+  }
+  .work-frame:hover .go { animation: nudge .6s infinite; }
+  @keyframes nudge { 0%,100%{transform:translateX(0);} 50%{transform:translateX(8px);} }
+  .work-thumb {
+    height: 120px; border-radius: 10px; margin-bottom: 16px;
+    display:flex; align-items:center; justify-content:center; font-size: 3rem;
+    border: 2px dashed rgba(43,39,35,.3);
+  }
+
+  /* ============ 联系 ============ */
+  #contact { text-align: center; padding-bottom: 120px; }
+  .contact-links { display:flex; flex-direction:column; gap:16px; align-items:center; margin-top: 24px; font-size:1.4rem; }
+  .contact-links a { text-decoration: none; border-bottom: 2.5px solid var(--accent); padding-bottom: 2px; cursor:none;}
+  @media(hover:none){ .contact-links a{cursor:pointer;} }
+  .contact-links a:hover { color: var(--accent); }
+
+  /* ============ 固定悬浮导航(始终可点,随时跳转) ============ */
+  #floatnav {
+    position: fixed;
+    top: 20px; right: 20px;
+    z-index: 600;
+    display: flex;
+    gap: 8px;
+    padding: 8px 10px;
+    background: rgba(247,243,234,.9);
+    border: 2.5px solid var(--ink);
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    box-shadow: 3px 3px 0 rgba(43,39,35,.18);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    transform: translateY(-12px);
+    transition: opacity .4s, transform .4s;
+    pointer-events: none;
+  }
+  #floatnav.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  #floatnav a {
+    font-family: var(--hand);
+    font-size: 1rem;
+    text-decoration: none;
+    color: var(--ink);
+    padding: 3px 12px;
+    border-radius: 40px 12px 40px 12px;
+    cursor: none;
+    transition: background .15s, color .15s, transform .15s;
+  }
+  @media(hover:none){ #floatnav a{ cursor:pointer; } }
+  #floatnav a:hover { background: var(--accent2); color:#fff; transform: rotate(-2deg); }
+  #floatnav a.top { color: var(--accent); }
+  @media (max-width: 520px){
+    #floatnav { top: 12px; right: 12px; padding: 6px 8px; gap: 4px; }
+    #floatnav a { font-size: .9rem; padding: 3px 8px; }
+  }
+
+  /* ============ 努力的小人(固定右下角) ============ */
+  #worker {
+    position: fixed;
+    right: 24px; bottom: 20px;
+    width: 90px; height: 90px;
+    z-index: 500;
+    cursor: none;
+  }
+  @media(hover:none){ #worker{cursor:pointer;} }
+  #worker svg { width: 100%; height: 100%; }
+  #worker .arm { transform-origin: 50px 52px; animation: typing .6s infinite alternate; }
+  @keyframes typing { from{ transform: rotate(-8deg);} to{ transform: rotate(8deg);} }
+  #worker-speech {
+    position: absolute;
+    right: 92px; bottom: 40px;
+    white-space: nowrap;
+    background: var(--paper);
+    border: 2.5px solid var(--ink);
+    border-radius: 18px 18px 4px 18px;
+    padding: 8px 16px;
+    font-size: 1rem;
+    opacity: 0;
+    transform: translateY(6px) scale(.9);
+    transition: all .2s;
+    pointer-events: none;
+  }
+  #worker-speech.show { opacity: 1; transform: translateY(0) scale(1); }
+
+  footer { text-align:center; padding: 30px; font-size:.9rem; color:#9a9186; }
+</style>
+</head>
+<body>
+
+<!-- SVG 滤镜:给手绘框加"纸张粗糙"抖动感 -->
+<svg width="0" height="0" style="position:absolute">
+  <filter id="roughpaper">
+    <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.5"/>
+  </filter>
+</svg>
+
+<!-- 自定义光标:小蜜蜂 -->
+<svg id="cursor-bee" viewBox="0 0 40 40">
+  <g transform="rotate(10 20 20)">
+    <!-- 翅膀 -->
+    <ellipse cx="14" cy="12" rx="7" ry="4" fill="#cfe0f0" stroke="#2b2723" stroke-width="1.2" opacity="0.85"/>
+    <ellipse cx="26" cy="12" rx="7" ry="4" fill="#cfe0f0" stroke="#2b2723" stroke-width="1.2" opacity="0.85"/>
+    <!-- 身体 -->
+    <ellipse cx="20" cy="24" rx="9" ry="7" fill="#e8a13a" stroke="#2b2723" stroke-width="1.5"/>
+    <!-- 条纹 -->
+    <path d="M14 21 Q20 24 26 21" stroke="#2b2723" stroke-width="1.5" fill="none"/>
+    <path d="M13 26 Q20 29 27 26" stroke="#2b2723" stroke-width="1.5" fill="none"/>
+    <!-- 眼睛 -->
+    <circle cx="24" cy="22" r="1.4" fill="#2b2723"/>
+  </g>
+</svg>
+
+<!-- ============ HERO ============ -->
+<section id="hero">
+  <!-- 散布的可点击手绘涂鸦彩蛋 -->
+  <div class="doodle" id="doodle-music" data-egg="music" style="top:20%; left:16%;" title="点我">
+    <svg viewBox="0 0 60 60"><g fill="none" stroke="#2b2723" stroke-width="2.5" stroke-linecap="round">
+      <path d="M22 14 L22 40"/><path d="M42 10 L42 36"/><path d="M22 14 L42 10"/>
+      <ellipse cx="16" cy="42" rx="7" ry="5" fill="#d94f4f" stroke-width="2"/>
+      <ellipse cx="36" cy="38" rx="7" ry="5" fill="#e8a13a" stroke-width="2"/>
+    </g></svg>
+    <span class="doodle-label">摇滚</span>
+  </div>
+
+  <div class="doodle" id="doodle-card" data-egg="werewolf" style="top:24%; right:15%;" title="点我">
+    <svg viewBox="0 0 60 60"><g fill="var(--paper)" stroke="#2b2723" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+      <rect x="12" y="12" width="24" height="34" rx="4" transform="rotate(-10 24 29)"/>
+      <rect x="22" y="14" width="24" height="34" rx="4" transform="rotate(9 34 31)"/>
+      <g transform="rotate(9 34 31)">
+        <path d="M28 26 l-3 -5 5 2 4 0 5 -2 -3 5" />
+        <path d="M27 28 Q34 24 41 28 Q42 36 34 40 Q26 36 27 28 Z" fill="none"/>
+        <circle cx="31" cy="31" r="1.3" fill="#2b2723"/><circle cx="37" cy="31" r="1.3" fill="#2b2723"/>
+        <path d="M32 36 l2 2 2 -2" />
+      </g>
+    </g></svg>
+    <span class="doodle-label">狼人杀</span>
+  </div>
+
+  <div class="doodle" id="doodle-star" data-egg="star" style="bottom:26%; left:19%;" title="点我">
+    <svg viewBox="0 0 60 60"><path d="M30 8 L36 24 L53 24 L39 34 L45 51 L30 40 L15 51 L21 34 L7 24 L24 24 Z"
+      fill="#e8a13a" stroke="#2b2723" stroke-width="2.5" stroke-linejoin="round"/></svg>
+    <span class="doodle-label">成就</span>
+  </div>
+
+  <div class="doodle" id="doodle-wand" data-egg="vibe" style="bottom:30%; right:18%;" title="点我">
+    <svg viewBox="0 0 60 60"><g stroke="#2b2723" stroke-width="2.5" stroke-linecap="round">
+      <line x1="14" y1="46" x2="40" y2="20"/>
+      <path d="M40 20 l3 -3" /><path d="M44 8 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 z" fill="#4a7fb5" stroke-width="1.5"/>
+      <path d="M18 14 l1 3 3 1 -3 1 -1 3 -1 -3 -3 -1 3 -1 z" fill="#d94f4f" stroke-width="1"/>
+    </g></svg>
+    <span class="doodle-label">vibe coding</span>
+  </div>
+
+  <!-- 名字:SVG 描边动画 -->
+  <h1 class="hero-title">小宁</h1>
+  <p class="hero-sub">欢迎来到我的世界</p>
+  <p class="hero-hint">✦ 试试点点飘在旁边的小涂鸦 ✦</p>
+  <nav class="hero-nav">
+    <a href="#about" class="sketch-btn">关于我</a>
+    <a href="#work" class="sketch-btn">作品</a>
+    <a href="#contact" class="sketch-btn">联系</a>
+  </nav>
+  <div class="down-arrow">↓</div>
+</section>
+
+<!-- 彩蛋弹层 -->
+<div id="egg-overlay">
+  <div id="egg-card" class="sketch-box">
+    <button id="egg-close" title="关掉">✕</button>
+    <div id="egg-content"></div>
+  </div>
+</div>
+
+<!-- ============ 关于我 ============ -->
+<section id="about">
+  <h2 class="section-title">关于我</h2>
+  <p class="about-text">
+    本硕<span class="hl">西电保研</span>,通信工程。<br>
+    喜欢 <span class="hl">vibe coding</span> —— 和 AI 一起把想法变成能跑的东西。<br>
+    喜欢<span class="hl">探索</span>,喜欢<span class="hl">创造</span>。<br>
+    工作之外,是个<span class="hl">摇滚乐</span>爱好者,也是<span class="hl">狼人杀</span><span style="white-space:nowrap">桌上的常客。</span><br>
+    <span style="font-size:1.1rem;color:#8a8175">（点点下面的小气泡试试）</span>
+  </p>
+  <div class="bubbles">
+    <span class="bubble" data-msg="研究生特等奖学金 🏆 全校顶尖那一档!">特等奖学金</span>
+    <span class="bubble" data-msg="本科教改班 GPA 4.8 / 5.0 📚">GPA 4.8/5.0</span>
+    <span class="bubble" data-msg="保研上岸,ISN 国家重点实验室 🎓">保研上岸</span>
+    <span class="bubble" data-msg="互联网+ 创新创业大赛 · 校赛金奖 🥇">互联网+ 金奖</span>
+    <span class="bubble" data-msg="党员 · 优秀研究生 ✊">优秀研究生</span>
+  </div>
+</section>
+
+<!-- ============ 经历 & 项目 ============ -->
+<section id="exp">
+  <h2 class="section-title">在做的事</h2>
+  <div class="cards">
+    <div class="card sketch-box">
+      <h3>京东健康 · 后端开发实习</h3>
+      <span class="tag">B2C 产品研发部 · AI 工程</span>
+      <ul>
+        <li>618 期间扛住 AI 巡检 <b>92W SKU / 705W 次</b>,识别 23.5% 问题点位,省下约 <b>2280 人日</b></li>
+        <li>独立承接保健食品 AI 资质审核链路,年审核量 <b>27W+</b>、外包成本 <b>122W+</b> 场景下降本,已上线切量</li>
+        <li>组套建品自动化:9 个手工节点压到 2 个,建品耗时 <b>2h → 20min</b>,效率提升约 <b>500%</b></li>
+        <li>沉淀分布式限流(ZSET+Lua)、多模态模型动态路由、Workflow Skill 等可复用工程能力</li>
+      </ul>
+    </div>
+    <div class="card sketch-box">
+      <h3>医药电商找药智能 Agent</h3>
+      <span class="tag">Spring AI · RAG · 状态图编排</span>
+      <ul>
+        <li>面向"说不清药名但有购药需求"的模糊找药场景,做了个会检索、会推理的 Agent</li>
+        <li>状态图编排 + 说明书 RAG + SSE/Flux 流式返回,边生成边出结果</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 作品 ============ -->
+<section id="work">
+  <h2 class="section-title">我造的东西</h2>
+  <div class="works">
+    <a class="work-frame sketch-box" href="https://hulaai.online" target="_blank" rel="noopener">
+      <div class="work-thumb" id="thumb-anaya"></div>
+      <h3>阿那亚戏剧节互助平台</h3>
+      <p class="desc">线下活动互助 & 拼车平台。2 天开发核心功能、1 天上线,上线 10 天近万次访问、~2000 用户。前后端 + 部署一人包。</p>
+      <span class="go">去看看 →</span>
+    </a>
+    <a class="work-frame sketch-box" href="https://hertype.hulaai.online" target="_blank" rel="noopener">
+      <div class="work-thumb" id="thumb-hertype"></div>
+      <h3>HerType 语言检查器</h3>
+      <p class="desc">像查拼写错误一样,帮你发现日常表达里那些习以为常、却值得多想一层的措辞。</p>
+      <span class="go">去看看 →</span>
+    </a>
+  </div>
+</section>
+
+<!-- ============ 联系 ============ -->
+<section id="contact">
+  <h2 class="section-title">找我聊聊</h2>
+  <div class="contact-links">
+    <a href="mailto:364231060@qq.com">📮 364231060@qq.com</a>
+    <a href="https://github.com/hulaaa128" target="_blank" rel="noopener">🐙 github.com/hulaaa128</a>
+  </div>
+  <p style="margin-top:40px;font-size:1.3rem;color:#8a8175">和我一起创造吧 ✨</p>
+</section>
+
+<!-- 固定悬浮导航:滚动后出现,随时跳转 -->
+<nav id="floatnav">
+  <a href="#hero" class="top">↑ 顶部</a>
+  <a href="#about">关于</a>
+  <a href="#exp">经历</a>
+  <a href="#work">作品</a>
+  <a href="#contact">联系</a>
+</nav>
+
+<!-- 努力的小人 -->
+<div id="worker" title="点我一下">
+  <div id="worker-speech"></div>
+  <svg viewBox="0 0 100 100">
+    <!-- 桌子 -->
+    <line x1="20" y1="80" x2="80" y2="80" stroke="#2b2723" stroke-width="2.5"/>
+    <line x1="26" y1="80" x2="26" y2="94" stroke="#2b2723" stroke-width="2.5"/>
+    <line x1="74" y1="80" x2="74" y2="94" stroke="#2b2723" stroke-width="2.5"/>
+    <!-- 电脑 -->
+    <rect x="40" y="66" width="26" height="16" rx="2" fill="none" stroke="#2b2723" stroke-width="2"/>
+    <!-- 头 -->
+    <circle cx="42" cy="44" r="11" fill="var(--paper)" stroke="#2b2723" stroke-width="2.5"/>
+    <!-- 身体 -->
+    <path d="M34 78 Q34 56 42 55 Q50 56 50 66" fill="none" stroke="#2b2723" stroke-width="2.5"/>
+    <!-- 打字的手臂 -->
+    <path class="arm" d="M46 60 Q54 58 54 68" fill="none" stroke="#2b2723" stroke-width="2.5"/>
+    <!-- 眼睛(专注) -->
+    <line x1="38" y1="44" x2="41" y2="44" stroke="#2b2723" stroke-width="1.8"/>
+    <line x1="44" y1="44" x2="47" y2="44" stroke="#2b2723" stroke-width="1.8"/>
+  </svg>
+</div>
+
+<footer>© 2026 王奕宁 · 用 vibe coding 手搓的小站 ✎</footer>
+
+<script>
+  // ============ 小蜜蜂光标跟随(缓动,带一点"追不上"的延迟) ============
+  const bee = document.getElementById('cursor-bee');
+  let bx = window.innerWidth/2, by = window.innerHeight/2;
+  let tx = bx, ty = by;
+  window.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+  function beeLoop(){
+    bx += (tx - bx) * 0.4;
+    by += (ty - by) * 0.4;
+    bee.style.transform = `translate(${bx-17}px, ${by-17}px)`;
+    requestAnimationFrame(beeLoop);
+  }
+  beeLoop();
+
+  // ============ 成就气泡点击 ============
+  document.querySelectorAll('.bubble').forEach(b => {
+    b.addEventListener('click', () => {
+      showPop(b.getAttribute('data-msg'), b);
+    });
+  });
+  function showPop(msg, el){
+    const pop = document.createElement('div');
+    pop.textContent = msg;
+    pop.style.cssText = `
+      position:fixed; z-index:9998; font-family:var(--hand);
+      background:var(--paper); border:2.5px solid var(--ink);
+      border-radius:18px 18px 18px 4px; padding:12px 20px; font-size:1.1rem;
+      max-width:260px; box-shadow:4px 4px 0 rgba(43,39,35,.25);
+      transition:opacity .3s, transform .3s; opacity:0; transform:scale(.8);
+    `;
+    const r = el.getBoundingClientRect();
+    pop.style.left = Math.min(r.left, window.innerWidth-280) + 'px';
+    pop.style.top = (r.top - 60) + 'px';
+    document.body.appendChild(pop);
+    requestAnimationFrame(()=>{ pop.style.opacity='1'; pop.style.transform='scale(1)'; });
+    setTimeout(()=>{ pop.style.opacity='0'; pop.style.transform='scale(.8)'; setTimeout(()=>pop.remove(),300); }, 1200);
+  }
+
+  // ============ 首页涂鸦彩蛋:点开手绘卡片,可关闭回首页 ============
+  const eggData = {
+    music: {
+      title: "我爱摇滚乐",
+      html: `<p>循环里常驻的:</p>
+        <ul><li>躁起来靠它续命,写代码 debug 的 BGM</li>
+        <li>Live 现场那种一起蹦的能量,谁懂啊</li>
+        <li>（想知道具体歌单?找我聊）</li></ul>`
+    },
+    werewolf: {
+      title: "狼人杀桌上常客",
+      html: `<p>桌游里最爱的社交博弈。</p>
+        <ul><li>发言逻辑、心理博弈,和写需求异曲同工</li>
+        <li>组局喊我,长期在线</li></ul>`
+    },
+    star: {
+      title: "一路的小成就",
+      html: `<ul><li>研究生特等奖学金</li>
+        <li>本硕西电保研 · ISN 国家重点实验室</li>
+        <li>本科教改班 GPA 4.8 / 5.0</li>
+        <li>互联网+ 创新创业大赛 校赛金奖</li></ul>`
+    },
+    vibe: {
+      title: "vibe coding 的魔法",
+      html: `<p>我最喜欢的工作方式 —— 和 AI 一起,把脑子里的想法几小时内变成能跑的东西。</p>
+        <ul><li>2 天做出阿那亚互助平台并上线</li>
+        <li>把智能体、Workflow 搭建从几小时压到 20 分钟</li></ul>`
+    }
+  };
+  const overlay = document.getElementById('egg-overlay');
+  const eggContent = document.getElementById('egg-content');
+  function openEgg(key){
+    const d = eggData[key]; if(!d) return;
+    eggContent.innerHTML = `<h3>${d.title}</h3>${d.html}`;
+    overlay.classList.add('show');
+  }
+  function closeEgg(){ overlay.classList.remove('show'); }
+  document.querySelectorAll('.doodle').forEach(el=>{
+    el.addEventListener('click', ()=> openEgg(el.getAttribute('data-egg')));
+  });
+  document.getElementById('egg-close').addEventListener('click', closeEgg);
+  overlay.addEventListener('click', e=>{ if(e.target === overlay) closeEgg(); });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeEgg(); });
+
+  // ============ 悬浮导航:离开首页后出现 ============
+  const floatnav = document.getElementById('floatnav');
+  const hero = document.getElementById('hero');
+  const navObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting) floatnav.classList.remove('show');
+      else floatnav.classList.add('show');
+    });
+  }, { threshold: 0.4 });
+  navObserver.observe(hero);
+
+  // ============ 点名字:冒一句话彩蛋 ============
+  const nameEl = document.querySelector('.hero-title');
+  const nameLines = ["嗨,我是小宁 👋","叫我小宁就好~","欢迎欢迎 🎉","点旁边的小涂鸦看看?"];
+  let nli = 0;
+  nameEl.addEventListener('click', ()=>{
+    showPop(nameLines[nli % nameLines.length], nameEl);
+    nli++;
+  });
+
+  // ============ 作品卡片手绘图标注入 ============
+  const anayaSvg = `<svg viewBox="0 0 120 80" style="height:100%"><g fill="none" stroke="#2b2723" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M30 30 Q30 18 44 18 Q58 18 58 30 Q58 46 44 50 Q30 46 30 30 Z" fill="#cfe0f0"/>
+    <circle cx="40" cy="30" r="2.5" fill="#2b2723"/><circle cx="50" cy="30" r="2.5" fill="#2b2723"/>
+    <path d="M38 40 Q44 44 50 40" />
+    <path d="M62 34 Q62 22 76 22 Q90 22 90 34 Q90 50 76 54 Q62 50 62 34 Z" fill="#e8a13a"/>
+    <path d="M70 36 l4 -3 M82 36 l4 -3" /><path d="M70 46 Q76 42 82 46" />
+  </g></svg>`;
+  const hertypeSvg = `<svg viewBox="0 0 120 80" style="height:100%"><g fill="none" stroke="#2b2723" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="30" y="24" width="46" height="34" rx="4" fill="var(--paper)"/>
+    <line x1="38" y1="34" x2="66" y2="34"/><line x1="38" y1="42" x2="60" y2="42" stroke="#d94f4f"/><line x1="38" y1="50" x2="64" y2="50"/>
+    <path d="M78 20 l14 14 -26 26 -14 0 0 -14 z" fill="#e8a13a"/>
+    <path d="M78 20 l14 14" /><path d="M68 30 l14 14" />
+  </g></svg>`;
+  const ta = document.getElementById('thumb-anaya'); if(ta) ta.innerHTML = anayaSvg;
+  const th = document.getElementById('thumb-hertype'); if(th) th.innerHTML = hertypeSvg;
+
+  // ============ 努力的小人:hover 说话 / 点击换台词 ============
+  const worker = document.getElementById('worker');
+  const speech = document.getElementById('worker-speech');
+  const lines = [
+    "又在改 bug…", "这行代码它不听话 😩", "commit 一下先",
+    "vibe coding 中 🎧", "让 AI 帮我写!", "摸鱼五分钟…",
+    "618 又要来了 😱", "部署成功!✨"
+  ];
+  let li = 0;
+  function say(){
+    speech.textContent = lines[li % lines.length];
+    li++;
+    speech.classList.add('show');
+    clearTimeout(speech._t);
+    speech._t = setTimeout(()=>speech.classList.remove('show'), 1800);
+  }
+  worker.addEventListener('mouseenter', say);
+  worker.addEventListener('click', say);
+  // 页面加载后主动打一次招呼
+  setTimeout(()=>{ speech.textContent = "嗨,我在这儿写代码~"; speech.classList.add('show'); setTimeout(()=>speech.classList.remove('show'),2500); }, 1500);
+</script>
+</body>
+</html>
