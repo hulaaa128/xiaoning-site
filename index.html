@@ -578,21 +578,14 @@
 <footer>© 2026 王奕宁 · 用 vibe coding 手搓的小站 ✎</footer>
 
 <script>
-  // ============ 小蜜蜂光标跟随 ============
+  // ============ 小蜜蜂光标跟随(缓动,带一点"追不上"的延迟) ============
   const bee = document.getElementById('cursor-bee');
   let bx = window.innerWidth/2, by = window.innerHeight/2;
   let tx = bx, ty = by;
   window.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
   function beeLoop(){
-    const dx = tx - bx, dy = ty - by;
-    const dist = Math.hypot(dx, dy);
-    if (dist < 0.5) {
-      // 已经到位:直接吸附,不再做亚像素抖动
-      bx = tx; by = ty;
-    } else {
-      bx += dx * 0.55;
-      by += dy * 0.55;
-    }
+    bx += (tx - bx) * 0.4;
+    by += (ty - by) * 0.4;
     bee.style.transform = `translate(${bx-17}px, ${by-17}px)`;
     requestAnimationFrame(beeLoop);
   }
@@ -657,9 +650,8 @@
     const d = eggData[key]; if(!d) return;
     eggContent.innerHTML = `<h3>${d.title}</h3>${d.html}`;
     overlay.classList.add('show');
-    bee.style.display = 'none';   // 弹层打开时藏起蜜蜂,不盖在卡片上
   }
-  function closeEgg(){ overlay.classList.remove('show'); bee.style.display = ''; }
+  function closeEgg(){ overlay.classList.remove('show'); }
   document.querySelectorAll('.doodle').forEach(el=>{
     el.addEventListener('click', ()=> openEgg(el.getAttribute('data-egg')));
   });
